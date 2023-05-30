@@ -1,9 +1,9 @@
 import React from "react";
 import PostContent from "../../components/HomePage/posts/post-detail/PostContent";
-import { getPostData } from "../../helpers/posts-util";
+import { getPostData, getPostsFiles } from "../../helpers/posts-util";
 
-const PostDetails = () => {
-    return <PostContent />;
+const PostDetails = (props) => {
+    return <PostContent post={props.post} />;
 };
 
 export const getStaticProps = (context) => {
@@ -15,6 +15,19 @@ export const getStaticProps = (context) => {
         props: {
             post: postData,
         },
+    };
+};
+
+export const getStaticPaths = () => {
+    const postFilenames = getPostsFiles();
+
+    const slugs = postFilenames.map((filename) =>
+        filename.replace(/\.md$/, "")
+    );
+
+    return {
+        paths: slugs.map((slug) => ({ params: { slug: slug } })) || [],
+        fallback: false,
     };
 };
 
